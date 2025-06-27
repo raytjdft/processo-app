@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Erro: Token não retornado pela rota /api/auth');
       return res.status(400).json({ error: 'Failed to obtain token' });
     }
-    
+    console.log('Token obtido:', token);
 
     // Obter lista de documentos
     const apiUrl = `${process.env.API_URL}/${normalizedProcessNumber}/documentos`;
@@ -65,13 +65,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Buscar texto de cada documento
     const documents: { id: string; text: string; type?: string }[] = [];
     for (const doc of response.data.documentos) {
-      
       if (!doc.id) {
         console.warn('Documento sem id:', doc);
         continue;
       }
-      if ((documentTypes.includes(doc.tipo?.nome)) && (doc.arquivo?.tamanhoTexto > 0))  { // Comparar com tipo.nome
-  
+      if (documentTypes.includes(doc.tipo?.nome) && doc.arquivo?.tamanhoTexto > 0) {
         const docUrl = `${process.env.API_URL}/${normalizedProcessNumber}/documentos/${doc.id}/texto`;
         console.log('Buscando texto do documento:', docUrl);
         try {
