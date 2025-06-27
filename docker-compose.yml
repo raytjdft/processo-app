@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - TOKEN_URL=${TOKEN_URL}
+      - API_URL=${API_URL}
+      - GROK_API_URL=${GROK_API_URL}
+      - GROK_API_SECRET=${GROK_API_SECRET}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
